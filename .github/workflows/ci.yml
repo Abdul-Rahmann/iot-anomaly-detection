@@ -3,7 +3,7 @@ name: CI Workflow
 on:
   push:
     branches:
-      - main  # Run on push to the main branch
+      - main  # Run on push to main branch
   pull_request:
     branches:
       - main  # Run on pull requests targeting the main branch
@@ -17,32 +17,42 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Conda environment
-      - name: Set up Conda environment
+      # Step 2: Ensure environment.yml exists
+      - name: Check for environment.yml
+        run: |
+          if [ ! -f environment.yml ]; then
+            echo "environment.yml not found"; exit 1;
+          fi
+
+      # Step 3: Cache Conda environment
+      - name: Cache Conda environment
+        uses: actions/cache@v3
+        with:
+          path: ~/conda-envs
+          key: conda-env-${{ hashFiles('environment.yml') }}  # Cache key based on environment.yml hash
+          restore-keys: |
+            conda-env-
+
+      # Step 4: Set up Conda
+      - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: 3.9  # Match the Python version in environment.yml
-          environment-file: environment.yml  # Use the provided environment file
-          auto-update-conda: true  # Ensure Conda is updated to avoid compatibility issues
+          auto-update-conda: true  # Ensure Conda is up to date
 
-      # Step 3: Verify Conda installation and environment creation
-      - name: Verify Conda environments
-        run: conda env list  # Check if the iiot-anomaly-detection environment exists
-
-      # Step 4: Debug environment creation (fallback)
-      # Recreate the environment from environment.yml explicitly in case of issues
-      - name: Recreate Conda environment (if needed)
+      # Step 5: Create or Update Conda Environment Using --prune
+      - name: Create or Update Conda Environment
         run: |
-          conda env remove -n iiot-anomaly-detection || true  # Remove the environment if it exists
-          conda env create -f environment.yml  # Recreate the environment from scratch
-          conda list -n iiot-anomaly-detection  # Verify the packages in the environment
+          mkdir -p ~/conda-envs
+          conda env update -p ~/conda-envs/iiot-anomaly-detection --file environment.yml --prune
+          conda list -p ~/conda-envs/iiot-anomaly-detection  # List installed packages for debugging
 
-      # Step 5: Verify pytest installation
+      # Step 6: Verify pytest installation
       - name: Verify pytest installation
         run: |
-          conda run -n iiot-anomaly-detection pytest --version  # Check pytest version
+          conda run -p ~/conda-envs/iiot-anomaly-detection pytest --version  # Check pytest version
 
-      # Step 6: Run tests
+      # Step 7: Run tests
       - name: Run tests
         run: |
-          conda run -n iiot-anomaly-detection pytest
+          conda run -p ~/conda-envs/iiot-anomaly-detection pytest

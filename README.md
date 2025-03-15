@@ -41,8 +41,8 @@ The system architecture comprises the following components:
 
 ## Datasets
 - **MIMII Dataset**: Contains audio recordings of industrial machines (valves, pumps, fans, and slide rails) under normal and anomalous conditions.
-- **Access**: [MIMII Dataset on Zenodo](https://zenodo.org/)
-- **Documentation**: [MIMII Dataset Documentation](https://zenodo.org/doc)
+- **Access**: [MIMII Dataset on Zenodo](https://zenodo.org/records/3384388)
+- **Documentation**: [MIMII Dataset Documentation](https://zenodo.org/records/3384388)
 
 ---
 
@@ -56,7 +56,7 @@ The system architecture comprises the following components:
 
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/yourusername/iot-anomaly-detection.git
+    git clone https://github.com/Abdul-Rahmann/iot-anomaly-detection.git
     cd iot-anomaly-detection
     ```
 
@@ -169,6 +169,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 ## Acknowledgements
-- [MIMII Dataset](https://zenodo.org/)
+- [MIMII Dataset](https://zenodo.org/records/3384388)
 - ThingSpeak IoT Platform
 - Dash Framework for Python

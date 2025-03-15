@@ -1,0 +1,48 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main  # Run on push to the main branch
+  pull_request:
+    branches:
+      - main  # Run on pull requests targeting the main branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Conda environment
+      - name: Set up Conda environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          python-version: 3.9  # Match the Python version in environment.yml
+          environment-file: environment.yml  # Use the provided environment file
+          auto-update-conda: true  # Ensure Conda is updated to avoid compatibility issues
+
+      # Step 3: Verify Conda installation and environment creation
+      - name: Verify Conda environments
+        run: conda env list  # Check if the iiot-anomaly-detection environment exists
+
+      # Step 4: Debug environment creation (fallback)
+      # Recreate the environment from environment.yml explicitly in case of issues
+      - name: Recreate Conda environment (if needed)
+        run: |
+          conda env remove -n iiot-anomaly-detection || true  # Remove the environment if it exists
+          conda env create -f environment.yml  # Recreate the environment from scratch
+          conda list -n iiot-anomaly-detection  # Verify the packages in the environment
+
+      # Step 5: Verify pytest installation
+      - name: Verify pytest installation
+        run: |
+          conda run -n iiot-anomaly-detection pytest --version  # Check pytest version
+
+      # Step 6: Run tests
+      - name: Run tests
+        run: |
+          conda run -n iiot-anomaly-detection pytest

@@ -11,6 +11,8 @@ dependencies:
   - seaborn=0.12.2
   - librosa=0.10.0
   - jupyterlab=3.6.5
+  - pyarrow=19.0.1
+  - fastparquet=2024.11.0
   - pip
   - pip:
       - dash

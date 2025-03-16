@@ -175,3 +175,7 @@ cython_debug/
 
 ROADMAP.md
 GUIDE.md
+
+# Ignore extracted and processed data
+data/processed/*
+data/raw/*

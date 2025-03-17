@@ -46,8 +46,8 @@ def extract_features(zip_path):
                             df = df.fillna(0)
 
                         # Normalize the features using StandardScaler
-                        scaler = StandardScaler()
-                        df.iloc[:, :] = scaler.fit_transform(df)
+                        # scaler = StandardScaler()
+                        # df.iloc[:, :] = scaler.fit_transform(df)
 
                         # Create the output directory structure
                         subdir = os.path.dirname(file)
